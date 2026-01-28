@@ -4,7 +4,7 @@ Here are the micropython project.
 Gerbers files to create the same pcb as video
 
 
-<video src="https://youtu.be/5JdUq83sYlk" width="600"></video>
+[![Ver video](https://img.youtube.com/vi/5JdUq83sYlk/0.jpg)](https://www.youtube.com/watch?v=5JdUq83sYlk)
 
 ![20260128_150007](https://github.com/user-attachments/assets/5f1df38b-e8c8-4d81-8bf2-1673ee1e396a)
 ![20260128_150417](https://github.com/user-attachments/assets/9c883305-4387-44f8-9a2d-6f66dd4cc42e)
