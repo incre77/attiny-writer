@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración y Subida</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="static/main.css">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col xl:flex-row items-start justify-center gap-8 p-4">  
+    <div class="space-y-6 w-full max-w-md">
+        <div class="card">
+            <button id="toggleConfigButton" class="toggle-button">
+                <h1 class="h1-title" style="margin-bottom: 0;">Configuración Wi-Fi</h1>
+                <span class="toggle-icon">▼</span> 
+            </button>
+
+            <div id="configContent" class="collapsed-content">
+                <p class="subtitle" style="margin-top: 1.5rem;">Introduce el SSID y la Contraseña para configurar el punto de acceso.</p>
+                <div class="space-y-4">
+                    <div>
+                        <label for="ssidInput" class="label">SSID (Nombre de Red)</label>
+                        <input type="text" id="ssidInput" placeholder="MiRedWiFi" value={{data["wifi"]["ssid"]}} class="input-text"/>
+                    </div>
+                    <div>
+                        <label for="passwordInput" class="label">Contraseña</label>
+                        <input type="password" id="passwordInput" placeholder="********" value={{data["wifi"]["pwd"]}} class="input-text"/>
+                    </div>
+                    
+                    <button id="saveButton" class="btn btn-blue">
+                        <span>Guardar Configuración</span>
+                    </button>
+                </div>
+                
+                <div id="configMessageArea" class="message-area hidden">
+                    <p id="configMessageText" class="msg-text"></p>
+                </div>
+            </div>
+        </div>
+    
+        
+        <div class="card">
+            <h1 class="h1-title">Subir Archivo Hex</h1>
+            <div class="space-y-6">
+                <div>
+                    <div id="dropArea" class="drop-area">
+                        <p>Arrastra y suelta el archivo aquí o haz clic para seleccionar</p>
+                        <input type="file" id="fileInput" class="hidden"/>
+                    </div>
+                    <p id="fileNameDisplay" class="file-name-display"></p>
+                </div>
+
+                <button id="uploadButton" class="btn btn-green" disabled>
+                    <span id="buttonText">Subir Archivo</span>
+                    <i id="spinner" class="spinner hidden"></i>
+                </button>
+            </div>
+
+            <div id="uploadMessageArea" class="message-area hidden">
+                <p id="uploadMessageText" class="msg-text"></p>
+            </div>
+        </div>
+
+        <div id="romWriteCard" class="card rom-card hidden">
+            <!--
+            <button id="deleteButton" class="btn btn-red">
+                <span>Borrar rom de la memoria</span>
+            </button>
+            -->
+            <h2 class="h2-title">¡Archivo en memoria!</h2>
+            <p class="text-sm mb-6" style="color:var(--color-warning-text);">
+                Usa el menu del grabador para iniciar el proceso de flasheo en el attiny.
+            </p>
+            <!--
+            <button id="writeRomButton" class="btn btn-blue">
+                <span>Grabar Archivo en ROM</span>
+            </button>
+            -->
+            <div id="romMessageArea" class="message-area hidden">
+                <p id="romMessageText" class="msg-text"></p>
+            </div>
+        </div>
+    </div>
+    
+    <div  class="card rom-card ">
+            
+            <h2 class="h2-title">Listado de roms</h2>
+            <p class="text-sm mb-6" style="color:var(--color-warning-text);">
+                Si subes nuevas roms tendrás que reiniciar el servidor para verlas en este listado.
+            </p>
+            <div id="lista-roms">
+                <p>Cargando lista...</p> 
+            </div>
+
+        </div>
+    </div>
+    
+    <script src="static/main.js" defer></script>
+</body>
+
+<script>
+function generarListaEnlaces(fileList, divId, baseUrl = '/roms/') {
+    const container = document.getElementById(divId);
+
+    if (!container) {
+        console.error(`Error: No se encontró el elemento con ID="${divId}"`);
+        return;
+    }
+
+    container.innerHTML = '';
+    const ul = document.createElement('x');
+    
+    fileList.forEach(filename => {
+        const li = document.createElement('li');
+        li.className = 'message-area msg-green btn ws'; 
+        const a = document.createElement('a');
+        a.textContent = filename;
+        const finalUrl = baseUrl.endsWith('/') ? `${baseUrl}${filename}` : `${baseUrl}/${filename}`;
+        a.href = finalUrl;
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
+
+    container.appendChild(ul);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const romsDisponibles = {{roms}};
+    generarListaEnlaces(romsDisponibles, 'lista-roms');
+}); 
+</script>
+</html>
